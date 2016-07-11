@@ -47,8 +47,8 @@ RUN pip install \
 
 
 # MySQL
-RUN apt-get install python-dev libmysqlclient-dev
-RUN pip install MySQL-python
+RUN apt-get install -y python3-dev libmysqlclient-dev
+RUN pip install mysqlclient
 
 
 # pathos (python parallel process)

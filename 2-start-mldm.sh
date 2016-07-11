@@ -12,6 +12,6 @@ WORK=$HOME/workspace
 ##  -p 6800-6810:6800-6810 \
 ##docker run -it kaggle/python bash 
 
-#docker-compose up -d
-docker-compose restart
+docker-compose up -d
+#docker-compose restart
 
