@@ -106,6 +106,7 @@ RUN dpkg-reconfigure -f noninteractive tzdata
 COPY runner.sh /runner.sh
 RUN chmod +x /runner.sh
 COPY bashrc /.bashrc
+COPY vimrc /.vimrc
 
 ## Set the working directory
 WORKDIR /home/workspace

@@ -93,14 +93,18 @@ alias h='history'
 alias gg='clear; grep -R'
 alias gp='ps -aux | grep '
 alias vi='vim'
-alias svi='sudo vim'
-alias sget='sudo apt-get install'
+alias svi='vim'
+alias sget='apt-get install'
 alias psg='ps ax | grep'
 alias psga='psg "parse\|flow\|train\|maxminer\|_rtbminer\|_tnative\|ipython-notebook\|submit"'
 alias python='python3'
 alias shup='stdbuf -o0 nohup'
 alias kget='wget -x --load-cookies ~/.ssh/cookies.txt -P data -nH --cut-dirs=5 '
 alias wat='watch tail -n 30 '
+bkill() {
+  kill -9 `ps aux | grep "$1" | awk '{print $2}'`
+}
+
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
