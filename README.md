@@ -1,6 +1,14 @@
 # Docker MLDM
 
-my docker environment for machine learning.
+my docker-compose environment for machine learning products, including:  
+
+1. machine learning environment  
+2. redis-cache  
+3. mongodb  
+4. postgres db  
+
+If you don't need 2-4, un-comment the first couple of lines to start a single container for machine learning!
+
 
 # How to use
 
