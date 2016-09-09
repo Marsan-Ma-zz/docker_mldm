@@ -95,6 +95,37 @@ RUN pip install mysqlclient
 #RUN curl -s http://www.eu.apache.org/dist/hadoop/common/hadoop-2.7.0/hadoop-2.7.0.tar.gz | tar -xz -C /usr/local/
 #RUN cd /usr/local && ln -s ./hadoop-2.7.0 hadoop
 
+# Tensorflow
+RUN pip install https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0-cp35-cp35m-linux_x86_64.whl
+
+
+#---------------------------------
+#   Supervisord
+#---------------------------------
+# Install Supervisor.
+RUN \
+  apt-get update && \
+  apt-get install -y supervisor && \
+  rm -rf /var/lib/apt/lists/* && \
+  sed -i 's/^\(\[supervisord\]\)$/\1\nnodaemon=true/' /etc/supervisor/supervisord.conf
+
+# Define mountable directories.
+VOLUME ["/etc/supervisor/conf.d"]
+
+# ------------------------------------------------------------------------------
+# Security changes
+# - Determine runlevel and services at startup [BOOT-5180]
+RUN update-rc.d supervisor defaults
+
+# - Check the output of apt-cache policy manually to determine why output is empty [KRNL-5788]
+RUN apt-get update | apt-get upgrade -y
+
+# - Install a PAM module for password strength testing like pam_cracklib or pam_passwdqc [AUTH-9262]
+RUN apt-get install libpam-cracklib -y
+RUN ln -s /lib/x86_64-linux-gnu/security/pam_cracklib.so /lib/security
+
+
+
 #---------------------------------
 #   Enviroment
 #---------------------------------
@@ -103,17 +134,17 @@ RUN echo "Asia/Taipei" > /etc/timezone
 RUN dpkg-reconfigure -f noninteractive tzdata
 
 # Add runner script
-COPY runner.sh /runner.sh
-RUN chmod +x /runner.sh
-COPY bashrc /.bashrc
-COPY vimrc /.vimrc
+COPY files/bashrc .bashrc
+COPY files/vimrc .vimrc
+
+# setup supervisor apps & start supervisor
+COPY files/supervisor/* /etc/supervisor/conf.d/
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
 
 ## Set the working directory
 WORKDIR /home/workspace
-RUN mkdir /home/workspace/notebooks
-#VOLUME /Users/marsan/wordspace
 
 EXPOSE 8880:8900
-EXPOSE 8579
+EXPOSE 80
+EXPOSE 443
 
-ENTRYPOINT ["/runner.sh"]
